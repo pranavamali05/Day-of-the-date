@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Day Finder</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 30px;
+        }
+        input, button {
+            padding: 8px;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        #result {
+            font-size: 22px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Find Day of Date</h2>
+
+<label>Enter Date:</label><br>
+<input type="number" id="date"><br>
+
+<label>Enter Month:</label><br>
+<input type="number" id="month"><br>
+
+<label>Enter Year:</label><br>
+<input type="number" id="year"><br>
+
+<button onclick="findDay()">Submit</button>
+
+<div id="result"></div>
+
+<script>
+function findDay() {
+    let date = parseInt(document.getElementById("date").value);
+    let month = parseInt(document.getElementById("month").value);
+    let year = parseInt(document.getElementById("year").value);
+
+    let monthcode = [1,4,4,0,2,5,0,3,6,1,4,6];
+    let yearcode = [4,2,0,6];
+    let day = ["saturday","sunday","monday","tuesday","wednesday","thursday","friday"];
+
+    // SAME LOGIC AS YOUR C++ PROGRAM
+
+    if (year % 100 === 0 && year % 400 !== 0 && month === 2 && date === 29) {
+        document.getElementById("result").innerHTML = "not possible";
+        return;
+    }
+    if (year % 4 !== 0 && month === 2 && date === 29) {
+        document.getElementById("result").innerHTML = "not possible";
+        return;
+    }
+
+    while (year < 1700 || year > 2099) {
+        if (year < 1700) year += 400;
+        else year -= 400;
+    }
+
+    let yc;
+    if (year >= 1700 && year < 1800) yc = yearcode[0];
+    else if (year >= 1800 && year < 1900) yc = yearcode[1];
+    else if (year >= 1900 && year < 2000) yc = yearcode[2];
+    else yc = yearcode[3];
+
+    let mc;
+    if (year % 4 === 0 && (month === 2 || month === 1 || month === 3))
+        mc = monthcode[month - 1] - 1;
+    else
+        mc = monthcode[month - 1];
+
+    let tempYear = year;
+    let l2d = 0;
+    l2d += tempYear % 10;
+    tempYear = Math.floor(tempYear / 10);
+    l2d += (tempYear % 10) * 10;
+
+    let ind = date + mc + yc + l2d + Math.floor(l2d / 4);
+
+    document.getElementById("result").innerHTML = "Day: " + day[ind % 7];
+}
+</script>
+
+</body>
+</html>
